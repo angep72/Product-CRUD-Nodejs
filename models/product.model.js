@@ -55,7 +55,6 @@ const ProductSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-// You can also use `pre-save` middleware to do some additional checks before saving if needed
 ProductSchema.pre('save', function (next) {
   // Example check: Ensure image URL is not empty
   if (!this.image || this.image.trim() === '') {
