@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser")
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser.extend());
+app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -27,7 +27,7 @@ mongoose
 
 //Routes
 app.use("/api/products",productRoute)
-app.get('/' ,productRoute)
+app.get('/' , (req,res)=>{res.render('home')});
 app.get("/api/products/:id", productRoute);
 app.post("/api/products", productRoute);
 app.put("/api/products/:id", productRoute);
