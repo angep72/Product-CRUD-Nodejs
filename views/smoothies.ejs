@@ -1,36 +1,58 @@
 <%- include('partials/header'); -%>
 
-<ul class="recipes">
-  <li class="recipe">
-    <img src="/smoothie.png" alt="smoothie recipe icon">
-    <h4>Banana Boost</h4>
-    <p>Banana, Vanilla ice cream, Milk</p>
-  </li>
-  <li class="recipe">
-    <img src="/smoothie.png" alt="smoothie recipe icon">
-    <h4>Tropical Twist</h4>
-    <p>Peach, Pinapple, Apple juice</p>
-  </li>
-  <li class="recipe">
-    <img src="/smoothie.png" alt="smoothie recipe icon">
-    <h4>Protein Packer</h4>
-    <p>Oats, Peanut butter, Milk, Banana, Blueberries</p>
-  </li>
-  <li class="recipe">
-    <img src="/smoothie.png" alt="smoothie recipe icon">
-    <h4>Banana Boost</h4>
-    <p>Banana, Vanilla ice cream, Milk</p>
-  </li>
-  <li class="recipe">
-    <img src="/smoothie.png" alt="smoothie recipe icon">
-    <h4>Tropical Twist</h4>
-    <p>Peach, Pinapple, Apple juice</p>
-  </li>
-  <li class="recipe">
-    <img src="/smoothie.png" alt="smoothie recipe icon">
-    <h4>Protein Packer</h4>
-    <p>Oats, Peanut butter, Milk, Banana, Blueberries</p>
-  </li>
-</ul>
+<div class="container">
+  <ul class="recipes" id="product-list">
+    <!-- Products will be loaded here dynamically -->
+    <li class="loading">Loading products...</li>
+  </ul>
+</div>
+
+<script>
+  // Fetch products from the backend when the page loads
+  document.addEventListener('DOMContentLoaded', async function() {
+    try {
+      const response = await fetch('/api/products');
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const products = await response.json();
+      console.log(products);
+      displayProducts(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      document.getElementById('product-list').innerHTML = 
+        '<li class="error">Error loading products. Please try again later.</li>';
+    }
+  });
+
+  // Function to display products in the list
+  function displayProducts(products) {
+    const productList = document.getElementById('product-list');
+    
+    if (!products || products.length === 0) {
+      productList.innerHTML = '<li class="no-products">No products available.</li>';
+      return;
+    }
+    
+    let productHTML = '';
+    
+    products.forEach(product => {
+      productHTML += `
+        <li class="product">
+          <img src="${product.image || '/product.png'}" alt="${product.name || 'Product'}">
+          <h4>${product.name || 'Unnamed Product'}</h4>
+          <p>${product.description || 'No description available'}</p>
+          <p><strong>Category:</strong> ${product.category || 'Uncategorized'}</p>
+          <p><strong>Price:</strong> $${product.price || 'N/A'}</p>
+          <p><strong>Quantity:</strong> ${product.quantity || 'N/A'}</p>
+        </li>
+      `;
+    });
+    
+    productList.innerHTML = productHTML;
+  }
+</script>
 
 <%- include('partials/footer'); -%>

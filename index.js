@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const productRoute = require ("./routes/product.route")
 const authRoutes = require("./routes/auth.route");
 const cookieParser = require("cookie-parser")
-const {requireAuth} = require("./middleware/auth.middleware")
+const {requireAuth, checkUser} = require("./middleware/auth.middleware")
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,14 +27,17 @@ mongoose
 
 //Routes
 app.use("/api/products",productRoute)
-app.get('/',(req,res)=>{res.render('home')});
+
 app.get("/api/products/:id", productRoute);
 app.post("/api/products", productRoute);
 app.put("/api/products/:id", productRoute);
 app.delete("/api/products/:id", productRoute);
-app.get('/smoothies',requireAuth,(req, res) => res.render('smoothies'));
 
-//Authorization and authentication routes
+
+// routes
+app.get('*', checkUser);
+app.get('/', (req, res) => res.render('home'));
+app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
 app.use(authRoutes);
 
 
