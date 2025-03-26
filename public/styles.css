@@ -88,6 +88,7 @@ button{
 header{
   display: flex;
   align-items: center;
+  
 }
 header img{
   width: 250px;
@@ -135,4 +136,81 @@ footer{
   text-align: center;
   margin-top: 120px;
   color: #aaa;
+}
+/* Container for the product list */
+.product {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Product image styling */
+.product img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Product title styling */
+.product h4 {
+  font-size: 1.2em;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Product description styling */
+.product p {
+  font-size: 1em;
+  margin: 5px 0;
+  color: #666;
+}
+
+/* Styling for the category label */
+.product p strong {
+  color: #333;
+}
+
+/* Price and quantity styling */
+.product p strong {
+  font-weight: bold;
+  color: #333;
+}
+
+.product .price {
+  font-size: 1.2em;
+  color: #2ecc71;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Quantity styling */
+.product .quantity {
+  font-size: 1em;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .product {
+    width: calc(50% - 30px); /* 2 columns on medium screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .product {
+    width: 100%; /* Single column on small screens */
+  }
 }
