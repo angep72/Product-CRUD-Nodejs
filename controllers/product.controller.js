@@ -25,7 +25,7 @@ const getSingleProduct = async (req, res) => {
 
 const postProduct = async (req, res) => {
   try {
-    const { name, description, price, category_id, category_name, stock_quantity } = req.body;
+    const { name, description, price, category_id, category_name, stock_quantity,image } = req.body;
 
     // Check if category_id is a valid ObjectId
     if (!isValidObjectId(category_id)) {
@@ -45,7 +45,8 @@ const postProduct = async (req, res) => {
       price,
       category_id,
       category_name,
-      stock_quantity
+      stock_quantity,
+      image
     });
     const newInventory = new Inventory({
       product: newProduct._id,  // Reference to the newly created product

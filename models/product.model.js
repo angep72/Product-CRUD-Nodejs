@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   category_id: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   category_name: { type: Schema.Types.String, ref: 'Category', required: true },
   stock_quantity: { type: Number, required: true },
+  image: { type: String, required: true},
   createdAt: { type: Date, default: Date.now },
 });
 
