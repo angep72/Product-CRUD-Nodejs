@@ -87,10 +87,45 @@ const deleteProduct = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   }
+
+const filtered_Products = async(req, res)=>{
+  try {
+    // Get query parameters from the URL
+    const { category_id, min_price, max_price, stock_available } = req.query;
+
+    let filter = {};
+
+    if (category_id) {
+      filter.category_id = category_id; // Filter by category
+    }
+
+    if (min_price || max_price) {
+      filter.price = {};
+    }
+      if (min_price) {
+        filter.price.$gte = parseFloat(min_price); 
+      }
+      if (max_price) {
+        filter.price.$lte = parseFloat(max_price); 
+    }
+
+    if (stock_available !== undefined) {
+      filter.stock_quantity = { $gt: 0 }; 
+    }
+
+    const products = await Product.find(filter);
+
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
 module.exports = {
   getAllProducts,
   getSingleProduct,
   postProduct,
   upDateProduct,
-  deleteProduct
+  deleteProduct,
+  filtered_Products
 };

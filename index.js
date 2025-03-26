@@ -8,6 +8,7 @@ const {requireAuth, checkUser} = require("./middleware/auth.middleware")
 const categoryRoutes = require('./routes/category.route');
 const inventoryRoutes = require('./routes/inventory');
 const Products = require('./models/product.model')
+const filtered_Products = require('./controllers/product.controller')
 //Middlewares
 
 
@@ -51,40 +52,7 @@ app.use("/api/products",productRoute)
 app.use("/api/category",categoryRoutes);
 app.use("/api/inventory",inventoryRoutes);
 
-app.get('/api/products',async(req, res)=>{
-  try {
-    // Get query parameters from the URL
-    const { category_id, min_price, max_price, stock_available } = req.query;
-
-    let filter = {};
-
-    if (category_id) {
-      filter.category_id = category_id; // Filter by category
-    }
-
-    if (min_price || max_price) {
-      filter.price = {};
-    }
-      if (min_price) {
-        filter.price.$gte = parseFloat(min_price); 
-      }
-      if (max_price) {
-        filter.price.$lte = parseFloat(max_price); 
-    }
-
-    if (stock_available !== undefined) {
-      filter.stock_quantity = { $gt: 0 }; 
-    }
-
-    const products = await Products.find(filter);
-
-    res.json(products);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server Error' });
-  }
-
-})
+app.get('/api/products',filtered_Products);
 
 
 

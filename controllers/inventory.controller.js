@@ -1,5 +1,3 @@
-
-
 const Inventory = require('../models/inventory.model');
 const Product = require('../models/product.model');
 
