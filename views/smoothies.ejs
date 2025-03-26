@@ -44,7 +44,7 @@
           <img src="${product.image || '/product.png'}" alt="${product.name || 'Product'}">
           <h4>${product.name || 'Unnamed Product'}</h4>
           <p>${product.description || 'No description available'}</p>
-          <p><strong>Category:</strong> ${product.category || 'Uncategorized'}</p>
+          <p><strong>Category:</strong> ${product.category_name || 'Uncategorized'}</p>
           <p><strong>Price:</strong> $${product.price || 'N/A'}</p>
           <p><strong>Quantity:</strong> ${product.quantity || 'N/A'}</p>
         </li>
