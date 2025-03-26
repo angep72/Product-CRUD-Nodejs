@@ -88,44 +88,33 @@ const deleteProduct = async (req, res) => {
     }
   }
 
-const filtered_Products = async(req, res)=>{
+const getProductByCategory = async (req, res) => {
   try {
-    // Get query parameters from the URL
-    const { category_id, min_price, max_price, stock_available } = req.query;
+    const categoryName = req.query.category_name; // Get category name from query parameter
 
-    let filter = {};
+    // Find the category based on the category name
+    const category = await Category.findOne({ name: categoryName });
 
-    if (category_id) {
-      filter.category_id = category_id; // Filter by category
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
     }
 
-    if (min_price || max_price) {
-      filter.price = {};
-    }
-      if (min_price) {
-        filter.price.$gte = parseFloat(min_price); 
-      }
-      if (max_price) {
-        filter.price.$lte = parseFloat(max_price); 
-    }
+    // Find products belonging to that category
+    const products = await Product.find({ category_id: category._id });
 
-    if (stock_available !== undefined) {
-      filter.stock_quantity = { $gt: 0 }; 
-    }
-
-    const products = await Product.find(filter);
-
-    res.json(products);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server Error' });
+    // Return the products as a response
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
   }
 }
+
 module.exports = {
   getAllProducts,
   getSingleProduct,
   postProduct,
   upDateProduct,
   deleteProduct,
-  filtered_Products
+  getProductByCategory
 };

@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser")
 const {requireAuth, checkUser} = require("./middleware/auth.middleware")
 const categoryRoutes = require('./routes/category.route');
 const inventoryRoutes = require('./routes/inventory');
-const Products = require('./models/product.model')
 const filtered_Products = require('./controllers/product.controller')
 //Middlewares
 
@@ -52,7 +51,7 @@ app.use("/api/products",productRoute)
 app.use("/api/category",categoryRoutes);
 app.use("/api/inventory",inventoryRoutes);
 
-app.get('/api/products',filtered_Products);
+// app.use('/api/productsi',filtered_Products);
 
 
 
