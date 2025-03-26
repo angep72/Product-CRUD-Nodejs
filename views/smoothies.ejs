@@ -1,6 +1,10 @@
 <%- include('partials/header'); -%>
 
 <div class="container">
+  <form action="/search" method="GET" class="search-form">
+    <input type="text" name="query" placeholder="Search products..." />
+    <button type="submit">Search</button>
+  </form>
   <ul class="recipes" id="product-list">
     <!-- Products will be loaded here dynamically -->
     <li class="loading">Loading products...</li>
