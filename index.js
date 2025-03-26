@@ -56,7 +56,6 @@ app.get('/api/products',async(req, res)=>{
     // Get query parameters from the URL
     const { category_id, min_price, max_price, stock_available } = req.query;
 
-    // Build the filter object dynamically based on the query params
     let filter = {};
 
     if (category_id) {
@@ -65,27 +64,26 @@ app.get('/api/products',async(req, res)=>{
 
     if (min_price || max_price) {
       filter.price = {};
+    }
       if (min_price) {
-        filter.price.$gte = parseFloat(min_price); // Greater than or equal to min_price
+        filter.price.$gte = parseFloat(min_price); 
       }
       if (max_price) {
-        filter.price.$lte = parseFloat(max_price); // Less than or equal to max_price
-      }
+        filter.price.$lte = parseFloat(max_price); 
     }
 
     if (stock_available !== undefined) {
-      filter.stock_quantity = { $gt: 0 }; // Only products with stock greater than 0
+      filter.stock_quantity = { $gt: 0 }; 
     }
 
-    // Query the database for products based on the filter
     const products = await Products.find(filter);
 
-    // Return the products
     res.json(products);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
   }
+
 })
 
 

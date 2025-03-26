@@ -30,7 +30,7 @@ exports.updateInventory = async (req, res) => {
 exports.getInventoryByProductId = async (req, res) => {
   try {
     const inventory = await Inventory.findOne({ product: req.params.productId })
-      .populate('product'); // Include full product details
+      .populate('Products'); // Include full product details
 
     if (!inventory) {
       return res.status(404).json({ error: 'Inventory not found' });
