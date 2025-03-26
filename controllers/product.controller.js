@@ -1,4 +1,9 @@
 const Product = require("../models/product.model");
+const { isValidObjectId } = require('mongoose'); 
+
+const Category = require("../models/category.model");
+
+const Inventory = require("../models/inventory.model");
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -19,12 +24,38 @@ const getSingleProduct = async (req, res) => {
 };
 
 const postProduct = async (req, res) => {
-    try {
-      const product = await Product.create(req.body);
-      res.status(201).json(product);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+  try {
+    const { name, description, price, category_id, stock_quantity } = req.body;
+
+    // Check if category_id is a valid ObjectId
+    if (!isValidObjectId(category_id)) {
+      return res.status(400).json({ message: 'Invalid category ID' });
     }
+
+    // Check if category exists
+    const category = await Category.findById(category_id);
+    if (!category) {
+      return res.status(400).json({ message: 'Category not found' });
+    }
+
+    // Create a new product
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      category_id,
+      stock_quantity
+    });
+
+    // Save the product to the database
+    await newProduct.save();
+
+    // Respond with the created product
+    res.status(201).json(newProduct);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
+  }
   }
 
 const upDateProduct = async (req, res) => {
