@@ -15,17 +15,25 @@ const getAllProducts = async (req, res) => {
 
 const getSingleProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (product) res.json(product);
-    else res.status(404).json({ message: "Product not found" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const productId = req.params.id;  // Assuming you're passing the product ID in the URL
+    const product = await Product.findById(productId)
+      .populate('category_id', 'name')  // Populate the category's name field
+      .exec();
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
 const postProduct = async (req, res) => {
   try {
-    const { name, description, price, category_id, category_name, stock_quantity,image } = req.body;
+    const { name, description, price, category_id, stock_quantity,image } = req.body;
 
     // Check if category_id is a valid ObjectId
     if (!isValidObjectId(category_id)) {
@@ -44,7 +52,6 @@ const postProduct = async (req, res) => {
       description,
       price,
       category_id,
-      category_name,
       stock_quantity,
       image
     });
