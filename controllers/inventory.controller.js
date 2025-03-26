@@ -29,16 +29,25 @@ exports.updateInventory = async (req, res) => {
 // Get inventory for a product (including product details)
 exports.getInventoryByProductId = async (req, res) => {
   try {
-    const inventory = await Inventory.findOne({ product: req.params.productId })
-      .populate('Products'); // Include full product details
+    const { productId } = req.params;
 
-    if (!inventory) {
-      return res.status(404).json({ error: 'Inventory not found' });
+    // Check if the product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(400).json({ message: 'Product not found' });
     }
-    res.status(200).json(inventory);
 
+    // Look up the inventory for the product
+    const inventory = await Inventory.findOne({ product: productId });
+    if (!inventory) {
+      return res.status(400).json({ message: 'Inventory not found for this product' });
+    }
+
+    // Respond with the stock count
+    res.status(200).json({ product: product.name, stockCount: inventory.stockCount });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
