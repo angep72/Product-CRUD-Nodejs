@@ -27,7 +27,6 @@ try {
 
   if (response.ok) {
     const products = await response.json();
-    console.log(products)
     // Display the filtered products
     displayProducts(products.products);
   } else {
