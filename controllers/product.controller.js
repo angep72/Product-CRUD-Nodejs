@@ -1,7 +1,7 @@
 const Product = require("../models/product.model");
 const { isValidObjectId } = require('mongoose'); 
 const Inventory = require('../models/inventory.model');
-
+const Cart = require('../models/cart.model');
 const Category = require("../models/category.model");
 
 const getAllProducts = async (req, res) => {
@@ -171,8 +171,86 @@ const filterProductsByCategory = async(req, res) => {
     });
   }
 }
+const addToCart =  async (req, res) => {
+
+  try {
+    const { productId, quantity = 1 } = req.body;
+    
+    // Validate input
+    if (!productId || quantity <= 0) {
+        return res.status(400).json({ 
+            message: 'Invalid product or quantity' 
+        });
+    }
+
+    // Find inventory for the product
+    const inventoryItem = await Inventory.findOne({ product: productId });
+
+    // Check if product exists in inventory
+    if (!inventoryItem) {
+        return res.status(404).json({ 
+            message: 'Product not found in inventory' 
+        });
+    }
+
+    // Check if sufficient stock is available
+    if (inventoryItem.stockCount < quantity) {
+        return res.status(400).json({ 
+            message: 'Insufficient stock',
+            availableStock: inventoryItem.stockCount 
+        });
+    }
+
+    // Find or create cart
+    let cart = await Cart.findOne({});
+    if (!cart) {
+        cart = new Cart({ 
+            items: [] 
+        });
+    }
+
+    // Check if product already in cart
+    const existingCartItem = cart.items.find(
+        item => item.product.toString() === productId
+    );
+
+    if (existingCartItem) {
+        // Update quantity if product exists
+        existingCartItem.quantity += quantity;
+    } else {
+        // Add new item to cart
+        cart.items.push({
+            product: productId,
+            quantity: quantity
+        });
+    }
+
+    // Save cart
+    await cart.save();
+
+    // Update inventory
+    inventoryItem.stockCount -= quantity;
+    inventoryItem.lastUpdated = new Date();
+    await inventoryItem.save();
+
+    res.status(200).json({ 
+        message: 'Item added to cart successfully',
+        cart: cart 
+    });
+
+} catch (error) {
+    console.error('Cart Addition Error:', error);
+    res.status(500).json({ 
+        message: 'Error adding item to cart', 
+        error: error.message 
+    });
+}
+}
+
 
 module.exports = {
+  addToCart,
+
   getAllProducts,
   getSingleProduct,
   postProduct,
@@ -180,4 +258,4 @@ module.exports = {
   deleteProduct,
   getProductByCategory,
   filterProductsByCategory
-};
+}

@@ -10,6 +10,8 @@ const cookieParser = require("cookie-parser");
 const { requireAuth, checkUser } = require("./middleware/auth.middleware");
 const categoryRoutes = require('./routes/category.route');
 const inventoryRoutes = require('./routes/inventory');
+const Cart = require('./models/cart.model');
+const Inventory = require('./models/inventory.model')
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -42,6 +44,13 @@ app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
 
 // Auth Routes
 app.use(authRoutes);
+
+app.post('/api/add-to-cart')
+
+
+
+
+
 
 // Start the server
 app.listen(process.env.PORT || 3000, "localhost", () => {

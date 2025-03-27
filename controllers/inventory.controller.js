@@ -42,7 +42,7 @@ exports.getInventoryByProductId = async (req, res) => {
     }
 
     // Respond with the stock count
-    res.status(200).json({ product: product.name, stockCount: inventory.stockCount });
+    res.status(200).json({ product: productId ,product: product.name, stockCount: inventory.stockCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
