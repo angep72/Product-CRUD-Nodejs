@@ -10,13 +10,42 @@ const cookieParser = require("cookie-parser");
 const { requireAuth, checkUser } = require("./middleware/auth.middleware");
 const categoryRoutes = require('./routes/category.route');
 const inventoryRoutes = require('./routes/inventory');
-const Cart = require('./models/cart.model');
-const Inventory = require('./models/inventory.model')
+const swaggerUi = require("swagger-ui-express");
+
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+//swagger configurations
+
+// const options = {
+//   definition: {
+//     openapi: "3.0.0",
+//     info: {
+//       title: "Smoothie Shop API",
+//       version: "1.0.0",
+//       description: "A simple API for managing smoothie shop products",
+//       contact: {
+//         name: "John Doe",
+//         email: "john.doe@example.com",
+//       },
+//     },
+//     servers: [
+//       {
+//         url: "http://localhost:3000",
+    
+//         description: "Development server",
+    
+//         },
+//     ],
+//   },
+//   apis: ["./routes/*.route.js"],
+// };
+
+const swaggerDocumentation = require("./swagger-output.json")
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
 
 // Set EJS as the view engine and serve static files from the 'public' folder
 app.set('view engine', 'ejs');
