@@ -76,6 +76,7 @@ try {
           <p><strong>Category:</strong> ${product.category_id.name || 'Uncategorized'}</p>
           <p><strong>Price:</strong> $${product.price || 'N/A'}</p>
           <p><strong>Quantity:</strong> ${product.quantity || 'N/A'}</p>
+          <a href="/edit/${product._id}" class="btn">add this to cart </a>
         </li>
       `;
     });

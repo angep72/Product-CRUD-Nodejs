@@ -45,7 +45,6 @@ app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
 // Auth Routes
 app.use(authRoutes);
 
-app.post('/api/add-to-cart')
 
 
 
