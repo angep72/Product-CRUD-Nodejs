@@ -120,11 +120,64 @@ const getProductByCategory = async (req, res) => {
   }
 }
 
+const filterProductsByCategory = async(req, res) => {
+  
+  try {
+    const { categoryName } = req.query;
+    console.log(categoryName);
+
+    // If no category name provided, return error
+    if (!categoryName) {
+      return res.status(400).json({ 
+        message: 'Category name is required' 
+      });
+    }
+
+    // Find the category first using the name
+    const category = await Category.findOne({ 
+      name: { $regex: new RegExp(categoryName, 'i') } 
+    });
+
+    // If no category found, return 404
+    if (!category) {
+      return res.status(404).json({ 
+        message: `No category found with name: ${categoryName}` 
+      });
+    }
+
+    // Find products that match the category_id
+    const products = await Product.find({ 
+      category_id: category._id 
+    }).populate('category_id'); // Optional: populate category details
+
+    // Handle case when no products are found
+    if (products.length === 0) {
+      return res.status(404).json({ 
+        message: `No products found in category: ${categoryName}` 
+      });
+    }
+
+    // Return filtered products
+    res.status(200).json({
+      category: category,
+      count: products.length,
+      products: products
+    });
+
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Error filtering products', 
+      error: error.message 
+    });
+  }
+}
+
 module.exports = {
   getAllProducts,
   getSingleProduct,
   postProduct,
   upDateProduct,
   deleteProduct,
-  getProductByCategory
+  getProductByCategory,
+  filterProductsByCategory
 };
